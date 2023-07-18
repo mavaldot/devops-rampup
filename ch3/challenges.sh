@@ -53,8 +53,8 @@ ip a
 #What's your IP and MAC address?
 
 ip a
-# IP Address = 169.254.147.188
-# MAC Address = c0:b8:83:...
+# IP Address = 10.0.2.15
+# MAC Address = 08:00:27:a5:83:c7
 
 #Can you communicate outside your private network? Test this with a command.
 
