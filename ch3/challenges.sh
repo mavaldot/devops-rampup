@@ -34,7 +34,13 @@ mkdir -p d1/d2/d3/foo/d4
 
 
 #List all processes running on your system and sort them by the username that's running each process.
+
+
+
 #Run the gedit program, search for it's PID and send it a signal to stop it. After this, send another one resume its execution.
+
+
+
 #Install SSH server. Start the service, and check its status. If it is not enabled, do it.
 #Display the network interfaces on your system. Do you see one that isn't physical? What's that interface?
 #What's your IP and MAC address?
