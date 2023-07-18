@@ -31,24 +31,60 @@ mkdir -p d1/d2/d3/foo/d4
 
 #Given the following text "We have 5 days to finish 5 lines of code of the Hi5b project" Replace all "5" by "five", the number must be alone, cannot be in a word.
 
-
+echo "We have 5 days to finish 5 lines of code of the Hi5b project" | sed "s/ 5 / five /g"
 
 #List all processes running on your system and sort them by the username that's running each process.
 
-
+ps aux --sort=user
 
 #Run the gedit program, search for it's PID and send it a signal to stop it. After this, send another one resume its execution.
 
-
+TODO
 
 #Install SSH server. Start the service, and check its status. If it is not enabled, do it.
+
+
+
 #Display the network interfaces on your system. Do you see one that isn't physical? What's that interface?
+
+ip a
+# The one that isn't physical is the loopback interface (localhost)
+
 #What's your IP and MAC address?
+
+ip a
+# IP Address = 169.254.147.188
+# MAC Address = c0:b8:83:...
+
 #Can you communicate outside your private network? Test this with a command.
+
+ping -c 3 google.com
+
 #What happens to a packet going to a host outside of the network?
+
+
+
 #What is the IP of your gateway(s)? Can you check this with two commands?
+
+
+
 #Trace the route being taken to connect to cloudflare.com.
+
+traceroute -I cloudflare.com
+
 #What's the IP address of perficient.com? What's their mail server?
+
+
+
 #List all TCP and UDP connections on the system.
+
+
+
 #What ports do you have open on the system?
+
+
+
 #List only the listening connections on the system.
+
+
+
