@@ -39,11 +39,16 @@ ps aux --sort=user
 
 #Run the gedit program, search for it's PID and send it a signal to stop it. After this, send another one resume its execution.
 
-TODO
+gedit &
+ps aux | grep gedit
+kill -STOP 5703
+kill -CONT 5703
 
 #Install SSH server. Start the service, and check its status. If it is not enabled, do it.
 
-
+sudo apt install openssh-server
+sudo systemctl status ssh
+sudo systemctl enable ssh --now
 
 #Display the network interfaces on your system. Do you see one that isn't physical? What's that interface?
 
@@ -62,11 +67,14 @@ ping -c 3 google.com
 
 #What happens to a packet going to a host outside of the network?
 
-
+traceroute -I google.com
+# The packet will hop through various gateways until it finds the destination
 
 #What is the IP of your gateway(s)? Can you check this with two commands?
 
-
+netstat -nr
+ip route | column -t
+# The IP of my gateway is 10.0.2.2
 
 #Trace the route being taken to connect to cloudflare.com.
 
@@ -74,17 +82,22 @@ traceroute -I cloudflare.com
 
 #What's the IP address of perficient.com? What's their mail server?
 
-
+dig perficient.com
+# IP Address: 130.250.210.219
+dig perficient.com MX
+# Mail server: perficient-com.mail.protection.outlook.com.
 
 #List all TCP and UDP connections on the system.
 
-
+ss -utan
 
 #What ports do you have open on the system?
 
-
+sudo lsof -i -P -n
+# Ports 67, 53426, 22
 
 #List only the listening connections on the system.
 
-
+netstat -l
+# TCP 22 (ssh), ICMP
 
