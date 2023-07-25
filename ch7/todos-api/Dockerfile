@@ -1,0 +1,12 @@
+FROM node:8.17-alpine
+
+WORKDIR /usr/src/app
+
+ARG JWT_SECRET=PRFT
+ARG TODO_API_PORT=8082
+
+COPY . .
+
+RUN npm install
+
+ENTRYPOINT JWT_SECRET=${JWT_SECRET} TODO_API_PORT=${TODO_API_PORT} npm start
