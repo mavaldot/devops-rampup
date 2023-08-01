@@ -1,0 +1,24 @@
+---
+- name: "Users"
+  hosts: users
+  become: yes
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: Build Docker image
+      docker_image:
+        build:
+          path: /home/vagrant/src
+        name: users-image
+        source: build
+    - name: Start the container
+      docker_container:
+        name: users-container
+        image: users-image
+        env:
+          SERVER_PORT: "{{users_port}}"
+          JWT_SECRET: "{{secret}}"
+        published_ports:
+          - "{{users_port}}:{{users_port}}"
+        state: started
+

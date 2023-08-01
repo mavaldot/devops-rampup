@@ -1,0 +1,8 @@
+---
+- import_playbook: docker.yaml
+- import_playbook: auth.yaml
+- import_playbook: redis.yaml
+- import_playbook: zipkin.yaml
+- import_playbook: users.yaml
+- import_playbook: todos.yaml
+- import_playbook: frontend.yaml

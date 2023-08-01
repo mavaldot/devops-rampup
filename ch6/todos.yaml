@@ -1,0 +1,34 @@
+---
+- name: "Todos"
+  hosts: todos
+  become: yes
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: Wait for port redis to start
+      wait_for:
+        host: "{{redis_address}}"
+        port: 6379
+        state: started
+        delay: 5
+        timeout: 300
+    - name: Build docker image
+      docker_image:
+        build:
+          path: /home/vagrant/src
+        name: todos-image
+        source: build
+    - name: Start the container
+      docker_container:
+        name: todos-container
+        image: todos-image
+        env:
+          TODO_API_PORT: "{{todos_port}}"
+          JWT_SECRET: "{{secret}}"
+          ZIPKIN_URL: "http://{{zipkin_address}}:9411/api/v2/spans"
+          REDIS_HOST: "{{redis_address}}"
+          REDIS_PORT: "6379"
+          REDIS_CHANNEL: "{{redis_channel}}"
+        published_ports:
+          - "{{todos_port}}:{{todos_port}}"
+        state: started

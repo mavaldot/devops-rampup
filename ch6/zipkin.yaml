@@ -1,0 +1,14 @@
+---
+- name: "Zipkin"
+  hosts: zipkin
+  become: yes
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: Run zipkin container
+      docker_container:
+        name: zipkin-container
+        image: openzipkin/zipkin
+        state: started
+        published_ports:
+          - "9411:9411"

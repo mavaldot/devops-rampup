@@ -1,0 +1,19 @@
+---
+ansible_user: vagrant
+ansible_ssh_private_key_file: ~/.ssh/id_rsa
+
+auth_address: 192.168.33.11
+redis_address: 192.168.33.12
+zipkin_address: 192.168.33.13
+todos_address: 192.168.33.14
+users_address: 192.168.33.15
+lmp_address: 192.168.33.16
+frontend_address: 192.168.33.17
+
+auth_port: "8000"
+todos_port: "8082"
+users_port: "8083"
+frontend_port: "8080"
+
+secret: PRFT
+redis_channel: log_channel
