@@ -1,0 +1,14 @@
+---
+- name: "Redis"
+  hosts: redis
+  become: yes
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: Run redis container
+      docker_container:
+        name: redis-container
+        image: redis:latest
+        state: started
+        published_ports:
+          - "6379:6379"

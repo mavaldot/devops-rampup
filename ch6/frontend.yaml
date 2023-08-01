@@ -1,0 +1,26 @@
+---
+- name: "Frontend"
+  hosts: frontend
+  become: yes
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: Build frontend Docker image
+      docker_image:
+        build:
+          path: /home/vagrant/src
+        name: frontend-image
+        source: build
+    - name: Start the container
+      docker_container:
+        name: frontend-container
+        image: frontend-image
+        env:
+          PORT: "{{frontend_port}}"
+          AUTH_API_ADDRESS: "http://{{auth_address}}:{{auth_port}}"
+          TODOS_API_ADDRESS: "http://{{todos_address}}:{{todos_port}}"
+          ZIPKIN_URL: "http://{{zipkin_address}}:9411/api/v2/spans"
+        published_ports:
+          - "{{frontend_port}}:{{frontend_port}}"
+        state: started
+    
