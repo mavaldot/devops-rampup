@@ -1,28 +1,27 @@
-resource "aws_security_group_rule" "sg_frontend_bastion_rule" {
+resource "aws_security_group_rule" "sg_users_bastion_rule" {
 
     type = "ingress"
     from_port = 22
     to_port = 22
     protocol = "tcp"
 
-    security_group_id = aws_security_group.ec2_sg["ec2-frontend-sg"].id
+    security_group_id = aws_security_group.ec2_sg["ec2-users-sg"].id
     source_security_group_id = aws_security_group.bastion_sg.id
 }
 
-resource "aws_security_group_rule" "sg_frontend_alb_rule" {
+resource "aws_security_group_rule" "sg_users_alb_rule" {
 
     type = "ingress"
-    from_port = 8080
-    to_port = 8080
+    from_port = 8083
+    to_port = 8083
     protocol = "tcp"
 
-    security_group_id = aws_security_group.ec2_sg["ec2-frontend-sg"].id
+    security_group_id = aws_security_group.ec2_sg["ec2-users-sg"].id
     source_security_group_id = aws_security_group.alb_sg.id
 }
 
-
-resource "aws_launch_template" "frontend" {
-  name = "frt"
+resource "aws_launch_template" "users" {
+  name = "users"
   image_id           = "ami-0f8e81a3da6e2510a"
   instance_type = "t2.micro"
   key_name      = aws_key_pair.rsa_key.key_name
@@ -31,20 +30,15 @@ resource "aws_launch_template" "frontend" {
     #!/bin/bash
     cd /home/ubuntu
     sudo apt update -y
-    sudo apt install -y python2 git
-    sudo apt install -y npm nodejs
-    git clone https://github.com/bortizf/microservice-app-example
-    cd microservice-app-example/frontend
-    rm package-lock.json
-    npm cache clean --force
-    npm install >/home/ubuntu/install.log 2>&1
-    npm run build >/home/ubuntu/build.log 2>&1
-    PORT=8080 AUTH_API_ADDRESS=http://${aws_lb.alb.dns_name}:8000 TODOS_API_ADDRESS=http://${aws_lb.alb.dns_name}:8082 \
-    ZIPKIN_URL=http://${aws_lb.alb.dns_name}:9411/api/v2/spans npm start 1>/home/ubuntu/log 2>/home/ubuntu/error.log
+    sudo apt install openjdk-8-jdk git -y
+    git clone https://github.com/bortizf/microservice-app-example.git
+    cd microservice-app-example/users-api
+    ./mvnw clean install >/home/ubuntu/build-log 2>&1 
+    SERVER_PORT=8083 JWT_SECRET=PRFT java -jar target/users-api-0.0.1-SNAPSHOT.jar >/home/ubuntu/log 2>/home/ubuntu/error.log 
     EOF
   )
 
-  vpc_security_group_ids = [aws_security_group.ec2_sg["ec2-frontend-sg"].id]
+  vpc_security_group_ids = [aws_security_group.ec2_sg["ec2-users-sg"].id]
 
   lifecycle {
     create_before_destroy = true
@@ -57,7 +51,7 @@ resource "aws_launch_template" "frontend" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "ec2-80"
+      Name = "ec2-8083-users"
       project = var.project
       responsible = var.responsible
     }
@@ -72,13 +66,13 @@ resource "aws_launch_template" "frontend" {
   }
 }
 
-resource "aws_autoscaling_group" "frontend" {
+resource "aws_autoscaling_group" "users" {
   min_size             = 1
   max_size             = 2
   desired_capacity     = 1
 
   launch_template {
-    id = aws_launch_template.frontend.id
+    id = aws_launch_template.users.id
     version = "$Latest"
   }
 
